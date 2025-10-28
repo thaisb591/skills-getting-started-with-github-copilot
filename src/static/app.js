@@ -10,12 +10,13 @@ document.addEventListener("DOMContentLoaded", () => {
       const response = await fetch("/activities");
       const activities = await response.json();
 
-      // Clear loading message
+      // Clear loading message and select options
       activitiesList.innerHTML = "";
-      // Reset select options (keep placeholder)
-      activitySelect.innerHTML = '<option value="">-- Select an activity --</option>';
+      const selectOptions = [
+        '<option value="">-- Select an activity --</option>'
+      ];
 
-      // Populate activities list
+      // Populate activities list and build select options array
       Object.entries(activities).forEach(([name, details]) => {
         const activityCard = document.createElement("div");
         activityCard.className = "activity-card";
@@ -99,12 +100,11 @@ document.addEventListener("DOMContentLoaded", () => {
           });
         }, 0);
 
-        // Add option to select dropdown
-        const option = document.createElement("option");
-        option.value = name;
-        option.textContent = name;
-        activitySelect.appendChild(option);
+        // Add option to select dropdown (array)
+        selectOptions.push(`<option value="${name}">${name}</option>`);
       });
+      // Atualiza o select de atividades uma única vez
+      activitySelect.innerHTML = selectOptions.join("");
     } catch (error) {
       activitiesList.innerHTML = "<p>Failed to load activities. Please try again later.</p>";
       console.error("Error fetching activities:", error);
